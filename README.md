@@ -12,6 +12,9 @@ Leverages GitHub Actions to automate the delivery of Calibre News.
 
 ## Setup
 
+> [!TIP]
+> 📹 A Brief Tour: [https://youtu.be/sIFsoztF58A](https://youtu.be/sIFsoztF58A)
+
 1) Create a project in your repositories using this template.
 2) Navigate to [ [Settings](../../settings) > __[Environments](../../settings/environments)__ ] in the project.
 3) Click "__New environment__" to create a new one called `calibre-news`.
