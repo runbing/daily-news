@@ -121,7 +121,7 @@ jobs:
             echo 'No ebook needs send'; exit 1
           fi
           mkdir ebooks
-          mv "*.${ext,,}" ebooks
+          mv *.${ext,,} ebooks
       - name: Sending Ebook
         if: ${{ success() }}
         run: |
