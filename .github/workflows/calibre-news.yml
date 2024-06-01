@@ -26,6 +26,7 @@ jobs:
       from: ${{ secrets.FROM }}
       to: ${{ secrets.TO }}
       ext: ${{ secrets.format || 'epub' }}
+      limit: ${{ secrets.size || 25 }}
     steps:
       - name: Checking Variable
         run: |
@@ -127,7 +128,7 @@ jobs:
         run: |
           while read -d '' ebook_path; do
             size=$(du -m "$ebook_path" | cut -f 1)
-            if [ $size -lt 25 ]; then
+            if [ $size -lt $limit ]; then
               filename="$(basename "$ebook_path")"
               title="${filename%.*}"
               echo "Sending: \"$filename\""
