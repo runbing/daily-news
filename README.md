@@ -29,6 +29,7 @@ Leverages GitHub Actions to automate the delivery of Calibre News.
 |SMTP|Yes|SMTP server|smtp.gmail.com|
 |PORT|Yes|SMTP port|465|
 |FORMAT|No|The ebook format|epub|
+|LIMIT|No|Attachment size limit (MB)|25|
 
 5) Navigate to "__[Actions](../../actions)__" and click [ __Calibre News Delivery__ > __Run workflow__ ] to test.
 
