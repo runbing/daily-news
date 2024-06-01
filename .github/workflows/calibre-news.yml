@@ -120,20 +120,26 @@ jobs:
           if [ $count -eq 0 ]; then
             echo 'No ebook needs send'; exit 1
           fi
-          mkdir ebooks
-          mv *.${ext,,} ebooks
       - name: Sending Ebook
         if: ${{ success() }}
         run: |
           while read -d '' ebook_path; do
-            filename="$(basename "$ebook_path")"
-            title="${filename%.*}"
-            echo "Sending: \"$filename\""
-            calibre-smtp -a "${filename}" -r "$relay" --port="$port" \
-              -e "${encrypt^^}" -u "$from" -p "$secret" -s "$title" \
-              "$from" "$to" "Deliver \"${title}\""
+            size=$(du -m "$ebook_path" | cut -f 1)
+            if [ $size -lt 25 ]; then
+              filename="$(basename "$ebook_path")"
+              title="${filename%.*}"
+              echo "Sending: \"$filename\""
+              calibre-smtp -a "${filename}" -r "$relay" --port="$port" \
+                -e "${encrypt^^}" -u "$from" -p "$secret" -s "$title" \
+                "$from" "$to" "Deliver \"${title}\""
+            fi
           done < <(find . -maxdepth 1 -type f -name "*.${ext,,}" -print0)
           echo "All jobs done"
+      - name: Collecting Ebook
+        if: ${{ success }}
+        run: |
+          mkdir ebooks
+          mv *.${ext,,} ebooks
       - name: Storing Ebook
         if: ${{ success() }}
         uses: actions/upload-artifact@v4
