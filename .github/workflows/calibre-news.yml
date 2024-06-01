@@ -96,8 +96,9 @@ jobs:
         if: ${{ success() }}
         run: |
           convert_ebook() {
+            mkdir ebooks
             ebook_name="${recipe_path%.*}"
-            ebook_path="$ebook_name.${ext,,}"
+            ebook_path="ebooks/$ebook_name.${ext,,}"
             echo "Converting \"$recipe_path\" > \"$ebook_path\"..."
             arguments="--authors=\"$author\" --publisher=\"$publisher\""
             cover="covers/${ebook_name}.png"
@@ -132,3 +133,8 @@ jobs:
               "$from" "$to" "Deliver \"${title}\""
           done < <(find . -maxdepth 1 -type f -name "*.${ext,,}" -print0)
           echo "All jobs done"
+      - name: Storing Ebook
+        uses: actions/upload-artifact@v4
+        with:
+          name: Calibre-News-Delivery
+          path: ebooks/
