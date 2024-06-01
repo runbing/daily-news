@@ -127,15 +127,17 @@ jobs:
         if: ${{ success() }}
         run: |
           while read -d '' ebook_path; do
+            filename="$(basename "$ebook_path")"
+            title="${filename%.*}"
             size=$(du -m "$ebook_path" | cut -f 1)
-            if [ $size -lt $limit ]; then
-              filename="$(basename "$ebook_path")"
-              title="${filename%.*}"
-              echo "Sending: \"$filename\""
-              calibre-smtp -a "$ebook_path" -r "$relay" --port="$port" \
-                -e "${encrypt^^}" -u "$from" -p "$secret" -s "$title" \
-                "$from" "$to" "Deliver \"${title}\""
+            if [ $size -ge $limit ]; then
+              echo "Size exceeds the limitation: $filename"
+              continue
             fi
+            echo "Sending: \"$filename\""
+            calibre-smtp -a "$ebook_path" -r "$relay" --port="$port" \
+              -e "${encrypt^^}" -u "$from" -p "$secret" -s "$title" \
+              "$from" "$to" "Deliver \"${title}\""
           done < <(find "$output" -type f -name "*.${ext,,}" -print0)
           echo "All jobs done"
       - name: Storing Ebook
